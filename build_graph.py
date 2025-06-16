@@ -11,9 +11,9 @@ def AD(p, q):
 
 def get_graph_from_epipolar_pair(row1, row2):
     smcf = pywrapgraph.SimpleMinCostFlow()
-    N    = len(row1)
+    N = len(row1)
     FLUX_CAPACITOR = 2 * N
-    SINK           = 2 * N + 1
+    SINK = 2 * N + 1
 
     for i in range(N):
         smcf.add_arc_with_capacity_and_unit_cost(FLUX_CAPACITOR, i, 1, 0)

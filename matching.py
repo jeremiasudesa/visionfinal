@@ -1,12 +1,10 @@
 from ortools.graph.python import min_cost_flow as pywrapgraph
 
-def get_matching_from_graph(smcf, FLUX_CAPACITOR, SINK, N,):
-    return get_matching_from_graph_with_restricted_flow(smcf, FLUX_CAPACITOR, SINK, N, N)# numero magico, dps lo saco
-
-def get_matching_from_graph_with_restricted_flow(smcf, FLUX_CAPACITOR, SINK, N, FLOW):
+def get_matching_from_graph(smcf, FLUX_CAPACITOR, SINK, N, OCCLUSION_COST = 100):
+    FLOW  = N  
     SOURCE = SINK + 1                                    
-    smcf.add_arc_with_capacity_and_unit_cost(SOURCE, FLUX_CAPACITOR, FLOW, 0)
-
+    smcf.add_arc_with_capacity_and_unit_cost(SOURCE, FLUX_CAPACITOR, N, 0)
+    smcf.add_arc_with_capacity_and_unit_cost(SOURCE, SINK, N, 10)    
     smcf.set_node_supply(SOURCE, FLOW)
     smcf.set_node_supply(SINK,  -FLOW)
 
@@ -23,3 +21,4 @@ def get_matching_from_graph_with_restricted_flow(smcf, FLUX_CAPACITOR, SINK, N, 
                 matching.append((u, v - N))
 
     return matching, smcf.optimal_cost()
+

@@ -4,7 +4,7 @@ import os
 from build_graph import get_graph_from_epipolar_pair
 from matching import get_matching_from_graph
 
-SCALE = 3
+SCALE = 10
 
 def path_to_img(path):
     m = cv2.imread(str(path))
