@@ -1,6 +1,6 @@
 from ortools.graph.python import min_cost_flow as pywrapgraph
 
-def get_matching_from_graph(smcf, FLUX_CAPACITOR, SINK, N, OCCLUSION_COST = 100):
+def get_matching_from_graph(smcf, FLUX_CAPACITOR, SINK, N, OCCLUSION_COST = 10):
     FLOW  = N  
     SOURCE = SINK + 1                                    
     smcf.add_arc_with_capacity_and_unit_cost(SOURCE, FLUX_CAPACITOR, FLOW, 0)
