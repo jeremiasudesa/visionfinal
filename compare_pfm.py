@@ -70,4 +70,4 @@ def read_pfm(file):
         return data, scale
 
 
-compute_metrics("MiddEval3/trainingF/Adirondack/pred_disp.pfm", "MiddEval3/trainingF/Adirondack/disp0GT.pfm")
+compute_metrics("MiddEval3/trainingF/Motorcycle/pred_disp.pfm", "MissWval3-GT0-FMiddEval3/trainingF/Motorcycle/disp0GT.pfm")
