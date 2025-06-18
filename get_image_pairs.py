@@ -2,7 +2,7 @@ from pathlib import Path
 
 def get_image_pairs():
     image_pairs = []
-    for entry in Path("MiddEval3/testF").iterdir():
+    for entry in Path("MiddEval3/trainingF").iterdir():
         if entry.is_dir():
             pair = []
             for sub_entry in entry.iterdir():

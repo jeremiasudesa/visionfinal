@@ -70,7 +70,7 @@ def segment_based_smooth_and_fill(disp, left_gray, been_matched,
     return filled_disp
 
 
-SCALE = 4
+SCALE = 7
 
 def path_to_img(path):
     m = cv2.imread(str(path))
@@ -96,6 +96,23 @@ def process_row(row_idx, row_l, row_r):
     solver, F, S, N = get_graph_from_epipolar_pair(row_l, row_r)
     matches, _ = get_matching_from_graph(solver, F, S, N)
     return row_idx, matches
+
+def write_pfm(path, image, scale=1):
+    if image.dtype.name != 'float32':
+        raise ValueError("PFM requires float32 arrays")
+
+    image = np.flipud(image)  # PFM stores from bottom to top
+    color = False
+    with open(path, 'wb') as f:
+        f.write(b'Pf\n' if not color else b'PF\n')
+        f.write(f"{image.shape[1]} {image.shape[0]}\n".encode())
+        endian = image.dtype.byteorder
+
+        if endian == '<' or (endian == '=' and np.little_endian):
+            scale = -scale
+        f.write(f"{scale}\n".encode())
+        image.tofile(f)
+
 
 def solve_pair(img1, img2):
     orig_left = cv2.imread(str(img1), cv2.IMREAD_GRAYSCALE)
@@ -153,5 +170,10 @@ def solve_pair(img1, img2):
         pass
     finally:
         cv2.destroyAllWindows()
+
+
+    disp_out_path = os.path.join(os.path.dirname(img1), "pred_disp.pfm")
+    write_pfm(disp_out_path, final_disp.astype(np.float32))
+    print(f"Saved predicted disparity to {disp_out_path}")
 
     return disp, disp_norm
