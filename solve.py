@@ -128,10 +128,13 @@ def solve_pair(img1, img2):
     final_disp = segment_based_smooth_and_fill(disp, left, been_matched, show=True)
 
     disp_norm = cv2.normalize(final_disp, None, 0, 255,
-                              norm_type=cv2.NORM_MINMAX).astype(np.uint8)
-    disp_norm[~been_matched] = 0
+                            norm_type=cv2.NORM_MINMAX).astype(np.uint8)
+    
     disp_color = cv2.applyColorMap(disp_norm, cv2.COLORMAP_BONE)
 
+    # Paint unmatched (occluded) pixels red in the color image
+    red = np.array([0, 0, 255], dtype=np.uint8)  # BGR
+    disp_color[~been_matched] = red
     left_color = cv2.cvtColor(orig_left, cv2.COLOR_GRAY2BGR)
     right_color = cv2.cvtColor(orig_right, cv2.COLOR_GRAY2BGR)
 
