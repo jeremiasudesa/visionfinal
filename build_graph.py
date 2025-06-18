@@ -3,7 +3,7 @@ from ortools.graph.python import min_cost_flow as pywrapgraph
 
 # Hyperparameters
 MAX_DISP     = 64       # disparity range
-LAMBDA_GEO   = 1      # geometry weight (can tune later)
+LAMBDA_GEO   = 10      # geometry weight (can tune later)
 LAMBDA_DATA  = 0.3      # photometric scaling
 TRUNC_PHOTO  = 12123132     # max photometric cost (cap)
    

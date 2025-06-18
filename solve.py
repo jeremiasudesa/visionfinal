@@ -7,9 +7,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 import functools
 
 
-def segment_based_smooth_and_fill(disp, left_gray, been_matched,
-                                  region_size=35, ruler=20.0,
-                                  min_valid=6, show=False):
+def segment_based_smooth_and_fill(disp, left_gray, been_matched,region_size=35, ruler=20.0,min_valid=6, show=False):
     """
     Smooth and fill disparity using SLIC segmentation and guided filtering.
 
@@ -70,7 +68,7 @@ def segment_based_smooth_and_fill(disp, left_gray, been_matched,
     return filled_disp
 
 
-SCALE = 7
+SCALE =7
 
 def path_to_img(path):
     m = cv2.imread(str(path))
@@ -142,16 +140,15 @@ def solve_pair(img1, img2):
                 os.system('cls' if os.name == 'nt' else 'clear')
                 print(f"{count}/{h}")
 
-    final_disp = segment_based_smooth_and_fill(disp, left, been_matched, show=True)
+    disp = segment_based_smooth_and_fill(disp, left, been_matched, show=True)
 
-    disp_norm = cv2.normalize(final_disp, None, 0, 255,
-                            norm_type=cv2.NORM_MINMAX).astype(np.uint8)
+    disp_norm = cv2.normalize(disp, None, 0, 255,norm_type=cv2.NORM_MINMAX).astype(np.uint8)
     
     disp_color = cv2.applyColorMap(disp_norm, cv2.COLORMAP_BONE)
 
     # Paint unmatched (occluded) pixels red in the color image
     red = np.array([0, 0, 255], dtype=np.uint8)  # BGR
-    disp_color[~been_matched] = red
+    # disp_color[~been_matched] = red
     left_color = cv2.cvtColor(orig_left, cv2.COLOR_GRAY2BGR)
     right_color = cv2.cvtColor(orig_right, cv2.COLOR_GRAY2BGR)
 
@@ -160,6 +157,9 @@ def solve_pair(img1, img2):
 
     combined = np.hstack((left_color, disp_color, right_color))
 
+    disp_out_path = os.path.join(os.path.dirname(img1), "pred_disp.pfm")
+    write_pfm(disp_out_path, disp_color.astype(np.float32))
+    print(f"Saved predicted disparity to {disp_out_path}")
     cv2.imshow("Left | Disparity | Right", combined)
     try:
         while True:
@@ -171,9 +171,5 @@ def solve_pair(img1, img2):
     finally:
         cv2.destroyAllWindows()
 
-
-    disp_out_path = os.path.join(os.path.dirname(img1), "pred_disp.pfm")
-    write_pfm(disp_out_path, final_disp.astype(np.float32))
-    print(f"Saved predicted disparity to {disp_out_path}")
 
     return disp, disp_norm
